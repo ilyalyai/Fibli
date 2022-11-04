@@ -53,12 +53,7 @@ vk_session = vk_api.VkApi(token=vkToken)
 longpoll = VkBotLongPoll(vk_session, group_id=vkGroupId)
 vk = vk_session.get_api()
 
-if not os.path.exists("fibliData"): 
-  if not os.path.exists("/content/gdrive/My Drive/fiblyMeme/"):
-    drive.mount("/content/gdrive")
-  path = "/content/gdrive/My Drive/fiblyMeme/"
-else:
-  path = "/fibliData/"
+path = "/fibliData/"
 sys.path.append(path)
 #-3 часа
 ##if datetime.datetime.today().weekday() is 4:
