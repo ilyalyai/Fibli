@@ -471,8 +471,11 @@ def SendNotificationToTelegram():
                 random_id=get_random_id(),
                 message="Всё ок, я его позвал")
 
-def ChechMessage(text):
-  global keyboardOn
+def ChechMessage(text, event):
+  if event.from_chat: #Если написали в беседе
+    message = event.obj['message']  
+  if event.from_user: #Если написали в личке
+    message = event.obj['message']   
   anonimusPhrases = {"ек макарек", "якорь мне в зад", "ешкин матрешкин", "елки иголки", "японский магнитофон", "едрить его в корень",\
                     "елы палы", "екарный бабай", "етижи пасатижи", "твою дивизию", "укуси меня пчела", "ешкин кот", "екалемене",\
                     "гвоздь мне в кеды", "ексель-моксель", "епарэсэтэ", "етишкин пистолет", "ежки-матрешки", "ядрен батон",\
