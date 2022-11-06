@@ -176,9 +176,25 @@ while True:
                     message='Прошу!',
                     conversation_message_id=event.obj.conversation_message_id,
                     keyboard=(keyboard_1 if f_toggle else keyboard_2).get_keyboard() if keyboardOn else None)      
+  except Timeout:
+    session = requests.Session()
+    vk_session = vk_api.VkApi(token=vkToken)
+    longpoll = VkBotLongPoll(vk_session, group_id= vkGroupId)
+    vk = vk_session.get_api()
+    continue;
   except KeyboardInterrupt:
-    #vk.messages.send(
-      #chat_id=2,
-      #random_id=get_random_id(),
-      #message="Всем покеда!")
     break;
+  except Exception as e:
+    res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
+    res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=" + str(e))
+    if event.chat_id:
+        vk.messages.send(
+              chat_id=event.chat_id,
+              random_id=get_random_id(),
+              message="Извините, я аж сломался, Илье я передал, он попробует починить")
+    elif message['from_id']:
+        vk.messages.send(
+                user_id=message['from_id'],
+                random_id=get_random_id(),
+                message="Извините, я аж сломался, Илье я передал, он попробует починить")
+    continue;
