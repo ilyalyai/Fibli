@@ -538,7 +538,8 @@ def SendNotificationToTelegram():
                 random_id=get_random_id(),
                 message="Всё ок, я его позвал")
 
-def ChechMessage(text):  
+def ChechMessage(text): 
+  global keyboardOn
   anonimusPhrases = {"ек макарек", "якорь мне в зад", "ешкин матрешкин", "елки иголки", "японский магнитофон", "едрить его в корень",\
                     "елы палы", "екарный бабай", "етижи пасатижи", "твою дивизию", "укуси меня пчела", "ешкин кот", "екалемене",\
                     "гвоздь мне в кеды", "ексель-моксель", "епарэсэтэ", "етишкин пистолет", "ежки-матрешки", "ядрен батон",\
@@ -719,7 +720,7 @@ while True:
               random_id=get_random_id(),
               keyboard=(keyboard_1 if f_toggle else keyboard_2).get_keyboard() if keyboardOn else None,
               message=first_name + ", " + text.lower())
-        if event.from_user: #Если написали в личке
+        elif event.from_user: #Если написали в личке
           message = event.obj['message']       
           user_get=vk.users.get(user_ids = (message['from_id']))
           user_get=user_get[0]
