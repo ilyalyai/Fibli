@@ -672,7 +672,7 @@ def ChechMessage(text):
   if "фибли" in text or "[club181731504|@fibli]" in text:
     return TalkWithChatGPT(message['text'].lower().replace('[club181731504|@fibli]', '').replace('фибли', ''));
 
-
+print("Получаю доступ к ChatGPT...")
 api = ChatGPT(session_token, verbose=True)  # auth with session token				
 
 def ReStartChatGPT():
@@ -689,9 +689,6 @@ def TalkWithChatGPT(text):
 #     chat_id=2,
   #    random_id=get_random_id(),
   #   sticker_id = 3871)
-
-print("Получаю доступ к ChatGPT...")
-StartChatGPT()
 
 print("Готово \nЗагружаю модель TTS...")
 #TTS
