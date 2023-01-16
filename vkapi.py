@@ -25,6 +25,8 @@ from io import StringIO
 import shutil
 from pyChatGPT import ChatGPT
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+import pygame
+import torch
 
 settings = dict(one_time=False, inline=True)
 # №1. Клавиатура с 3 кнопками: "показать всплывающее сообщение", "открыть URL" и изменить меню (свой собственный тип)
@@ -331,7 +333,7 @@ def GetCard():
 
 def GetMeme(memetype):
   if memetype:
-    res = requests.get("https://meme-api.herokuapp.com/gimme/" + memetype)
+    res = requests.get("https://meme-api.com/gimme/" + memetype)
     data = res.json()
     if 'code' in data.keys():
       if str(event.obj.peer_id).startswith('200000000'):
@@ -670,11 +672,13 @@ def ChechMessage(text):
   if "фибли" in text or "[club181731504|@fibli]" in text:
     return TalkWithChatGPT(message['text'].lower().replace('[club181731504|@fibli]', '').replace('фибли', ''));
 
-def StartChatGPT()
+
+api = ChatGPT(session_token, verbose=True)  # auth with session token				
+def StartChatGPT():
   api = ChatGPT(session_token, verbose=True)  # auth with session token	
   api.clear_conversations()
   time.sleep(3)
-  #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
+  #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")'''
 
 def TalkWithChatGPT(text):
   resp = api.send_message(text)
@@ -684,7 +688,35 @@ def TalkWithChatGPT(text):
 #     chat_id=2,
   #    random_id=get_random_id(),
   #   sticker_id = 3871)
+
+print("Получаю доступ к ChatGPT...")
 StartChatGPT()
+
+print("Готово \nЗагружаю модель TTS...")
+#TTS
+device = torch.device('cpu')
+torch.set_num_threads(4)
+local_file = 'model.pt'
+
+if not os.path.isfile(local_file):
+	torch.hub.download_url_to_file('https://models.silero.ai/models/tts/ru/v3_1_ru.pt',local_file)
+
+model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "model")
+model.to(device)
+
+sample_rate = 48000
+speaker='eugene'
+
+def PlayAudio(text):
+  if(message['text'].lower() and "скажи" in message['text'].lower()):
+    audio_paths = model.save_wav(text=text,speaker=speaker,sample_rate=sample_rate)   
+    pygame.mixer.init()
+    pygame.mixer.music.load(audio_paths)
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+      pass
+
+print("Готово \nМожно начинать болтать!")
 while True:
   try:
     #schedule.run_pending()
@@ -722,6 +754,7 @@ while True:
           else:
             text = ChechMessage(message['text'])
           if text: 
+            PlayAudio(text)
             vk.messages.send(
               chat_id=event.chat_id,
               random_id=get_random_id(),
@@ -758,6 +791,7 @@ while True:
           else:
             text = ChechMessage(message['text'])
           if text:
+            PlayAudio(text)
             vk.messages.send(
                 user_id=message['from_id'],
                 random_id=get_random_id(),
@@ -793,7 +827,7 @@ while True:
                     peer_id=event.obj.peer_id,
                     message='Прошу!',
                     conversation_message_id=event.obj.conversation_message_id,
-                    keyboard=(keyboard_1 if f_toggle else keyboard_2).get_keyboard() if keyboardOn else None)      
+                    keyboard=(keyboard_1 if f_toggle else keyboard_2).get_keyboard() if keyboardOn else None)    
   except Timeout:
     session = requests.Session()
     vk_session = vk_api.VkApi(token=vkToken)
@@ -802,11 +836,10 @@ while True:
     continue;
   except KeyboardInterrupt:
     break;
-  except NoSuchElementException:
-  except TimeoutException:
+  except (NoSuchElementException, TimeoutException):
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, перезапустил ChatGPT!")
     StartChatGPT()
-    continue()
+    continue;
   except Exception as e:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=" + str(e))
