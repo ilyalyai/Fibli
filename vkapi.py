@@ -673,11 +673,15 @@ def ChechMessage(text):
     return TalkWithChatGPT(message['text'].lower().replace('[club181731504|@fibli]', '').replace('фибли', ''));
 
 print("Получаю доступ к ChatGPT...")
+global api
 api = ChatGPT(session_token, verbose=True)  # auth with session token				
 
 def ReStartChatGPT():
+  global api
+  del api
+  time.sleep(3)
   api = ChatGPT(session_token, verbose=True)  # auth with session token	
-  api.clear_conversations()
+  #api.clear_conversations()
   time.sleep(3)
   #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
 
@@ -834,7 +838,7 @@ while True:
     continue;
   except KeyboardInterrupt:
     break;
-  except (NoSuchElementException, TimeoutException):
+  except TimeoutException:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, перезапустил ChatGPT!")
     ReStartChatGPT()
     continue;
