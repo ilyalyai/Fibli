@@ -23,6 +23,8 @@ import schedule
 from requests.exceptions import Timeout
 from io import StringIO
 import shutil
+from pyChatGPT import ChatGPT
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 settings = dict(one_time=False, inline=True)
 # №1. Клавиатура с 3 кнопками: "показать всплывающее сообщение", "открыть URL" и изменить меню (свой собственный тип)
@@ -661,25 +663,28 @@ def ChechMessage(text):
       pictureName = str(random.randint(1, 30))
       GetPicture("anonimus/anonimus" + pictureName + ".jpg");
       return ""
+  if "перезапусти" in text and "chatgpt" in text:
+    StartChatGPT()
+    return "Готово"
   #это когда подключу нейросеть
   if "фибли" in text or "[club181731504|@fibli]" in text:
     return TalkWithChatGPT(message['text'].lower().replace('[club181731504|@fibli]', '').replace('фибли', ''));
 
-from pyChatGPT import ChatGPT
-
-api = ChatGPT(session_token, verbose=True)  # auth with session token
-#api.reset_conversation()
-api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
+def StartChatGPT()
+  api = ChatGPT(session_token, verbose=True)  # auth with session token	
+  api.clear_conversations()
+  time.sleep(3)
+  #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
 
 def TalkWithChatGPT(text):
-    resp = api.send_message(text)
-    # api.refresh_auth()  # refresh the authorization token
-    return resp['message'].replace("ChatGPT", "Фибли")
+  resp = api.send_message(text)
+  return resp['message'].replace("ChatGPT", "Фибли")
 
 #vk.messages.send(
 #     chat_id=2,
   #    random_id=get_random_id(),
   #   sticker_id = 3871)
+StartChatGPT()
 while True:
   try:
     #schedule.run_pending()
@@ -797,6 +802,11 @@ while True:
     continue;
   except KeyboardInterrupt:
     break;
+  except NoSuchElementException:
+  except TimeoutException:
+    res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, перезапустил ChatGPT!")
+    StartChatGPT()
+    continue()
   except Exception as e:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=" + str(e))
@@ -810,4 +820,5 @@ while True:
                 user_id=message['from_id'],
                 random_id=get_random_id(),
                 message="Извините, я аж сломался, Илье я передал, он попробует починить")
+    StartChatGPT()
     continue;
