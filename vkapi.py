@@ -666,7 +666,7 @@ def ChechMessage(text):
       GetPicture("anonimus/anonimus" + pictureName + ".jpg");
       return ""
   if "перезапусти" in text and "chatgpt" in text:
-    StartChatGPT()
+    ReStartChatGPT()
     return "Готово"
   #это когда подключу нейросеть
   if "фибли" in text or "[club181731504|@fibli]" in text:
@@ -674,11 +674,12 @@ def ChechMessage(text):
 
 
 api = ChatGPT(session_token, verbose=True)  # auth with session token				
-def StartChatGPT():
+
+def ReStartChatGPT():
   api = ChatGPT(session_token, verbose=True)  # auth with session token	
   api.clear_conversations()
   time.sleep(3)
-  #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")'''
+  #api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
 
 def TalkWithChatGPT(text):
   resp = api.send_message(text)
@@ -838,7 +839,7 @@ while True:
     break;
   except (NoSuchElementException, TimeoutException):
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, перезапустил ChatGPT!")
-    StartChatGPT()
+    ReStartChatGPT()
     continue;
   except Exception as e:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
@@ -853,5 +854,4 @@ while True:
                 user_id=message['from_id'],
                 random_id=get_random_id(),
                 message="Извините, я аж сломался, Илье я передал, он попробует починить")
-    StartChatGPT()
     continue;
