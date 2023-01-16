@@ -662,16 +662,19 @@ def ChechMessage(text):
       GetPicture("anonimus/anonimus" + pictureName + ".jpg");
       return ""
   #это когда подключу нейросеть
-  '''
-    if "фибли" in text or "[club181731504|@fibli]" in text:
-    try:
-      newText = message['text'].replace('[club181731504|@fibli]', '')
-      newText = message['text'].replace('фибли, ', '')     
-      res = pred(newText)
-      return res;
-    except JSONDecodeError:
-      return ""
-  '''
+  if "фибли" in text or "[club181731504|@fibli]" in text:
+    return TalkWithChatGPT(message['text'].lower().replace('[club181731504|@fibli]', '').replace('фибли', ''));
+
+from pyChatGPT import ChatGPT
+
+api = ChatGPT(session_token, verbose=True)  # auth with session token
+#api.reset_conversation()
+api.send_message("Ты чат-бот. Пообщайся со мной на русском языке.")
+
+def TalkWithChatGPT(text):
+    resp = api.send_message(text)
+    # api.refresh_auth()  # refresh the authorization token
+    return resp['message'].replace("ChatGPT", "Фибли")
 
 
 #vk.messages.send(
@@ -795,7 +798,7 @@ while True:
     continue;
   except KeyboardInterrupt:
     break;
-  except Exception as e:
+  """except Exception as e:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=" + str(e))
     if event.chat_id:
@@ -809,3 +812,4 @@ while True:
                 random_id=get_random_id(),
                 message="Извините, я аж сломался, Илье я передал, он попробует починить")
     continue;
+  """
