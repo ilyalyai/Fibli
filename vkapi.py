@@ -797,7 +797,7 @@ while True:
     continue;
   except KeyboardInterrupt:
     break;
-  """except Exception as e:
+  except Exception as e:
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=Сэр, у меня неполадки!")
     res = requests.get("https://api.telegram.org/" + telegramKey + "/sendMessage?chat_id=794252283&text=" + str(e))
     if event.chat_id:
@@ -811,4 +811,3 @@ while True:
                 random_id=get_random_id(),
                 message="Извините, я аж сломался, Илье я передал, он попробует починить")
     continue;
-  """
