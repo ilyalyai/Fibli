@@ -26,7 +26,7 @@ import shutil
 from pyChatGPT import ChatGPT
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 '''import pygame
-'''import torch
+import torch'''
 
 settings = dict(one_time=False, inline=True)
 # №1. Клавиатура с 3 кнопками: "показать всплывающее сообщение", "открыть URL" и изменить меню (свой собственный тип)
@@ -703,7 +703,7 @@ model = torch.package.PackageImporter(local_file).load_pickle("tts_models", "mod
 model.to(device)
 
 sample_rate = 48000
-speaker='eugene''''
+speaker="eugene"'''
 
 def PlayAudio(text):
   if(False and message['text'].lower() and "скажи " in message['text'].lower()):
