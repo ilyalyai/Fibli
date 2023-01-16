@@ -676,7 +676,6 @@ def TalkWithChatGPT(text):
     # api.refresh_auth()  # refresh the authorization token
     return resp['message'].replace("ChatGPT", "Фибли")
 
-
 #vk.messages.send(
 #     chat_id=2,
   #    random_id=get_random_id(),

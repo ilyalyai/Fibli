@@ -1,5 +1,6 @@
 /apiKeys.py
 /vkapiOld.py
+<<<<<<< HEAD
 /.idea/.gitignore
 /.idea/Fibli.iml
 /.idea/inspectionProfiles/Project_Default.xml
@@ -3157,3 +3158,7 @@
 /venv/P/Scripts/python.exe
 /venv/P/Scripts/pythonw.exe
 /venv/P/pyvenv.cfg
+=======
+/__pycache__
+/picture.jpg
+>>>>>>> 145fb54bbbc55ad87113f49ee45f9ed79149c243
